@@ -14,17 +14,18 @@ class comparisonatorCart extends Component {
         let teams = chartData
             .map((t) => t)
 
-        const chartsData = [].concat(teams, teams).map((t, i) => ({
-            week: i + 1,
-            image: t.imageDataURL,
-            index: Math.floor(Math.random() * 400)
-        }))
+       
         const ronaldosData = [].concat(teams, teams).map((t, i) => ({
 
             index: Math.floor(Math.random() * 400)
         }))
         const messisData = [].concat(teams, teams).map((t, i) => ({
 
+            index: Math.floor(Math.random() * 400)
+        }))
+        const chartsData = [].concat(teams, teams).map((t, i) => ({
+            week: i + 1,
+            image: t.imageDataURL,
             index: Math.floor(Math.random() * 400)
         }))
 
@@ -45,10 +46,14 @@ class comparisonatorCart extends Component {
                     id: "basic-bar",
                     toolbar: {
                         show: false,
+                    },
+                    zoom:{
+                        enabled: false,
                     }
 
                 },
                 annotations: {
+                   
                     points: chartsData.map(d => ({
                         x: d.week,
                         y: d.index,
@@ -62,21 +67,20 @@ class comparisonatorCart extends Component {
                         }
                     }))
                 },
+                
+                
+                
                 xaxis: {
                     categories: chartsData.map(d => d.week)
                 },
+                
+                dataLabels: {
+                    enabled: false
+                }
             }
-            ,
-            dataLabels: {
-                enabled: false
-            }
+           
             ,
             series: [
-                {
-                    name: "Boupendza",
-                    data: chartsData.map(d => d.index)
-
-                },
                 {
                     name: "Messi",
                     data: messisData.map(d => d.index)
@@ -85,11 +89,18 @@ class comparisonatorCart extends Component {
                     name: "Ronaldo",
                     data: ronaldosData.map(d => d.index)
                 },
+                {
+                    name: "Boupendza",
+                    data: chartsData.map(d => d.index ),
+                    
+
+                },
                 // {
                 //     name: "Average",
                 //     data: averageChart.map(d => d.index)
                 // },
-            ]
+            ],
+           
         };
     }
     getDataUri() {
@@ -102,19 +113,29 @@ class comparisonatorCart extends Component {
 
     }
 
+    // updateAnnotations() {
+    //     ApexCharts.exec("basic-bar", "addPointAnnotation").then(({ imgURI }) => {
+            
+    //     });
+
+    // }
+
     updateCharts() {
         const max = 90;
         const min = 30;
         const newMixedSeries = [];
+        // const newMixedImages = []
 
         this.state.series.forEach((s) => {
             const data = s.data.map(() => {
                 return Math.floor(Math.random() * (max - min + 1)) + min;
             });
             newMixedSeries.push({ data: data });
+            // newMixedImages.push({data:imageDataURL})
         });
         this.setState({
             series: newMixedSeries,
+            // image : newMixedImages,
             seriesRadial: [Math.floor(Math.random() * (90 - 50 + 1)) + 50]
         });
     }
@@ -124,7 +145,7 @@ class comparisonatorCart extends Component {
         return (
             <>
                 <div className="dropdownItems">
-                    <select className="browser-default custom-select">
+                    <select className="browser-default custom-select" onChange={this.updateCharts}>
                         <option value="2">2020/2021 </option>
                         <option value="3">2019/2020</option>
                     </select>
@@ -132,7 +153,7 @@ class comparisonatorCart extends Component {
                         <option value="2" >Süper Lig, Turkey</option>
                         <option value="3" >Champions League,EU</option>
                     </select>
-                    <select className="browser-default custom-select">
+                    <select className="browser-default custom-select" onChange={this.updateCharts}>
                         <option value="2">LW</option>
                         <option value="3">CMF</option>
                         <option value="3">RW</option>
